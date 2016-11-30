@@ -1,0 +1,7 @@
+database:
+  override:
+   - touch 'not needed'
+
+test:
+  override:
+    - bundle exec rake
