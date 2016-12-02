@@ -5,8 +5,8 @@ require 'mojfile_uploader_api_client/version'
 Gem::Specification.new do |spec|
   spec.name = 'mojfile-uploader-api-client'
   spec.version = MojFileUploaderApiClient::VERSION
-  spec.authors = ['Jesus Laiz']
-  spec.email = ['jesus.laiz@digital.justice.gov.uk']
+  spec.authors = ['Jesus Laiz', 'Tax Tribunals Fees']
+  spec.email = ['jesus.laiz@digital.justice.gov.uk', 'taxtribsfees@digital.justice.gov.uk']
 
   spec.summary = 'API client for integration with the MOJ File Uploader'
   spec.homepage = 'https://github.com/ministryofjustice/mojfile-uploader-api-client'
