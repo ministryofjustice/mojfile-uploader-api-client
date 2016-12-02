@@ -61,8 +61,6 @@ module MojFileUploaderApiClient
       end
 
       self.response = Response.new(code: code, body: body)
-
-      raise RequestError, body unless response.success?
     end
   end
 end

@@ -51,6 +51,14 @@ RSpec.describe MojFileUploaderApiClient::Status do
         subject.call
         expect(subject.available?).to eq(true)
       end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(200)
+        expect(response.body).to eq({status: 'OK'})
+      end
     end
 
     context 'for a successful response without body' do
@@ -60,21 +68,47 @@ RSpec.describe MojFileUploaderApiClient::Status do
         subject.call
         expect(subject.available?).to eq(false)
       end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(200)
+        expect(response.body).to eq(nil)
+      end
     end
 
     context 'for an unsuccessful response with body' do
       let(:response) { instance_double('Response', code: 500, body: 'boom') }
 
-      it 'should raise a RequestError' do
-        expect { subject.call }.to raise_error(MojFileUploaderApiClient::RequestError, 'boom')
+      it 'should be false' do
+        subject.call
+        expect(subject.available?).to eq(false)
+      end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(500)
+        expect(response.body).to eq({body_parser_error: "743: unexpected token at 'boom'"})
       end
     end
 
     context 'for an unsuccessful response without body' do
       let(:response) { instance_double('Response', code: 500, body: nil) }
 
-      it 'should raise a RequestError' do
-        expect { subject.call }.to raise_error(MojFileUploaderApiClient::RequestError, nil)
+      it 'should be false' do
+        subject.call
+        expect(subject.available?).to eq(false)
+      end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(500)
+        expect(response.body).to eq(nil)
       end
     end
   end

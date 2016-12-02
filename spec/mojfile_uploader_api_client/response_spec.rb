@@ -66,6 +66,27 @@ RSpec.describe MojFileUploaderApiClient::Response do
     end
   end
 
+  describe 'blank body response' do
+    let(:code) { 200 }
+    let(:body) { '' }
+
+    it 'has a code' do
+      expect(subject.code).to eq(200)
+    end
+
+    it 'has blank body' do
+      expect(subject.body).to eq('')
+    end
+
+    it 'success false' do
+      expect(subject.success?).to be_truthy
+    end
+
+    it 'error true' do
+      expect(subject.error?).to be_falsey
+    end
+  end
+
   describe 'no body response' do
     let(:code) { 200 }
     let(:body) { nil }

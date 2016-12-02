@@ -109,6 +109,7 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
 
     context 'execute the request and get the response' do
       it 'should return a response object' do
+        expect(subject).to receive(:response).once.and_call_original
         response = subject.call
         expect(response).to be_a(MojFileUploaderApiClient::Response)
       end
@@ -134,27 +135,68 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
         allow(client).to receive(:execute).and_raise(exception)
       end
 
-      it 'should raise a RequestError exception' do
-        expect(MojFileUploaderApiClient::Response).to receive(:new).with(hash_including(code: 500)).and_call_original
-        expect { subject.call }.to raise_exception(MojFileUploaderApiClient::RequestError, nil)
+      it 'success? should be false' do
+        subject.call
+        expect(subject.response.success?).to eq(false)
+      end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(500)
+        expect(response.body).to eq(nil)
       end
     end
 
     context 'request unsuccessful with body' do
       let(:response) { instance_double('Response', code: 404, body: 'boom') }
 
-      it 'should raise a RequestError exception' do
-        expect(MojFileUploaderApiClient::Response).to receive(:new).with(hash_including(code: 404, body: 'boom')).and_call_original
-        expect { subject.call }.to raise_error(MojFileUploaderApiClient::RequestError, 'boom')
+      it 'success? should be false' do
+        subject.call
+        expect(subject.response.success?).to eq(false)
+      end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(404)
+        expect(response.body).to eq({body_parser_error: "743: unexpected token at 'boom'"})
+      end
+    end
+
+    context 'request unsuccessful with body blank' do
+      let(:response) { instance_double('Response', code: 404, body: '') }
+
+      it 'success? should be false' do
+        subject.call
+        expect(subject.response.success?).to eq(false)
+      end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(404)
+        expect(response.body).to eq('')
       end
     end
 
     context 'request unsuccessful without body' do
       let(:response) { instance_double('Response', code: 404, body: nil) }
 
-      it 'should raise a RequestError exception' do
-        expect(MojFileUploaderApiClient::Response).to receive(:new).with(hash_including(code: 404, body: nil)).and_call_original
-        expect { subject.call }.to raise_error(MojFileUploaderApiClient::RequestError, nil)
+      it 'success? should be false' do
+        subject.call
+        expect(subject.response.success?).to eq(false)
+      end
+
+      it 'should have a code and a body' do
+        subject.call
+        response = subject.response
+
+        expect(response.code).to eq(404)
+        expect(response.body).to eq(nil)
       end
     end
   end

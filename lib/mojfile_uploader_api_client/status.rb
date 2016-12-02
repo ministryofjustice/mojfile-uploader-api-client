@@ -10,7 +10,7 @@ module MojFileUploaderApiClient
     end
 
     def available?
-      status.eql?('OK')
+      response.success? && status.eql?('OK')
     end
 
     private
