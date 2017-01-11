@@ -2,7 +2,10 @@ require 'spec_helper'
 
 RSpec.describe MojFileUploaderApiClient::Status do
   let(:client) { RestClient::Request }
-  let(:response) { instance_double('Response', code: 200, body: '{}') }
+  # It also returns the status of the services it depends on, but this is
+  # sufficient for the purposes of the spec.
+  let(:response_body) { { service_status: 'ok' }.to_json }
+  let(:response) { instance_double('Response', code: 200, body: response_body) }
 
   subject { described_class.new }
 
@@ -11,7 +14,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
   end
 
   context 'endpoint' do
-    let(:expected_endpoint) { 'status' }
+    let(:expected_endpoint) { 'healthcheck' }
 
     it 'should return the endpoint' do
       expect(subject.endpoint).to eq(expected_endpoint)
@@ -19,7 +22,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
   end
 
   context 'URL' do
-    let(:expected_url) { 'http://example.com/status' }
+    let(:expected_url) { 'http://example.com/healthcheck' }
 
     it 'should build the full URL using base_url and endpoint' do
       expect(client).to receive(:execute).with(hash_including(url: expected_url))
@@ -45,8 +48,6 @@ RSpec.describe MojFileUploaderApiClient::Status do
 
   describe '#available?' do
     context 'for a successful response with body' do
-      let(:response) { instance_double('Response', code: 200, body: "{\"status\":\"OK\"}") }
-
       it 'should be true' do
         subject.call
         expect(subject.available?).to eq(true)
@@ -57,7 +58,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
         response = subject.response
 
         expect(response.code).to eq(200)
-        expect(response.body).to eq({status: 'OK'})
+        expect(response.body).to eq({service_status: 'ok'})
       end
     end
 
