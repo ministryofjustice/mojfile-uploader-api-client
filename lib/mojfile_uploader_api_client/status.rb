@@ -6,17 +6,17 @@ module MojFileUploaderApiClient
     end
 
     def endpoint
-      'status'
+      'healthcheck'
     end
 
     def available?
-      response.success? && status.eql?('OK')
+      response.success? && status.eql?('ok')
     end
 
     private
 
     def status
-      response.body&.fetch(:status)
+      response.body&.fetch(:service_status)
     end
   end
 end
