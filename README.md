@@ -1,5 +1,7 @@
 # mojfile-uploader-api-client
-An API client for mojfile-uploader
+An API client for [mojfile-uploader](https://github.com/ministryofjustice/mojfile-uploader)
+
+Please refer to the above project if you want to build your own client around the API.
 
 ## Configuration
 
