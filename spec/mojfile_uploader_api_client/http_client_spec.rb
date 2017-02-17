@@ -5,7 +5,7 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
   subject { described_class.new }
 
   let(:client) { RestClient::Request }
-  let(:response) { instance_double('Response', code: 200, body: '{}') }
+  let(:client_response) { instance_double('Response', code: 200, body: '{}') }
 
   describe 'default options' do
     it 'should have a default set of client options' do
@@ -79,7 +79,7 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
     before(:each) do
       allow(subject).to receive(:verb).and_return(:get)
       allow(subject).to receive(:endpoint).and_return('/test')
-      allow(client).to receive(:execute).and_return(response)
+      allow(client).to receive(:execute).and_return(client_response)
     end
 
     # URL is being tested in subclass specs but Mutant is a bit picky and want it to be covered also here.
@@ -156,24 +156,24 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
     end
 
     context 'request unsuccessful with body' do
-      let(:response) { instance_double('Response', code: 404, body: 'boom') }
+      let(:client_response) { instance_double('Response', code: 404, body: 'boom') }
 
       it 'success? should be false' do
         subject.call
         expect(subject.response.success?).to eq(false)
       end
 
-      it 'should have a code and a body' do
+      it 'should have a code and fail on body' do
         subject.call
         response = subject.response
 
         expect(response.code).to eq(404)
-        expect(response.body).to eq({body_parser_error: "743: unexpected token at 'boom'"})
+        expect { response.body }.to raise_error(MojFileUploaderApiClient::Response::UnparsableResponseError)
       end
     end
 
     context 'request unsuccessful with body blank' do
-      let(:response) { instance_double('Response', code: 404, body: '') }
+      let(:client_response) { instance_double('Response', code: 404, body: '') }
 
       it 'success? should be false' do
         subject.call
@@ -185,12 +185,12 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
         response = subject.response
 
         expect(response.code).to eq(404)
-        expect(response.body).to eq('')
+        expect(response.body).to eq(nil)
       end
     end
 
     context 'request unsuccessful without body' do
-      let(:response) { instance_double('Response', code: 404, body: nil) }
+      let(:client_response) { instance_double('Response', code: 404, body: nil) }
 
       it 'success? should be false' do
         subject.call

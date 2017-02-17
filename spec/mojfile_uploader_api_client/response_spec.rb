@@ -1,85 +1,62 @@
 require 'spec_helper'
 
 RSpec.describe MojFileUploaderApiClient::Response do
-
   subject { described_class.new(code: code, body: body) }
 
-  describe 'successful responses' do
-    let(:code) { 200 }
-    let(:body) { {result: 'ok'}.to_json }
+  let(:body) { nil }
+  let(:code) { nil }
 
-    it 'has a body' do
-      expect(subject.body).to eq({result: 'ok'})
+  describe '#body' do
+    describe 'when the response body is parsable' do
+      let(:body) { {result: 'ok'}.to_json }
+
+      it { is_expected.to have_attributes(body: {result: 'ok'}) }
     end
 
-    context '200 code' do
+    describe 'when the response body is nil' do
+      let(:body) { nil }
+
+      it { is_expected.to have_attributes(body: nil) }
+    end
+
+    describe 'when the response body is empty' do
+      let(:body) { '' }
+
+      it { is_expected.to have_attributes(body: nil) }
+    end
+
+    describe 'when the response body is unparsable' do
+      let(:body) { 'sadifuygwi3P982(*#Q$&(*' }
+
+      it 'raises an error' do
+        expect { subject.body }.to raise_error(MojFileUploaderApiClient::Response::UnparsableResponseError)
+      end
+    end
+  end
+
+  describe '#code' do
+    describe 'when the response is a 200' do
       let(:code) { 200 }
 
-      it 'has a code' do
-        expect(subject.code).to eq(200)
-      end
-
+      it { is_expected.to have_attributes(code: 200) }
       it { is_expected.to be_success }
       it { is_expected.to_not be_error }
     end
 
-    context '204 code' do
+    describe 'when the response is a 204' do
       let(:code) { 204 }
 
-      it 'has a code' do
-        expect(subject.code).to eq(204)
-      end
-
+      it { is_expected.to have_attributes(code: 204) }
       it { is_expected.to be_success }
       it { is_expected.to_not be_error }
     end
-  end
 
-  describe 'unsuccessful response' do
-    let(:code) { 404 }
-    let(:body) { 'not found' }
+    describe 'when the response is an error code' do
+      let(:code) { 404 }
 
-    it 'has a code' do
-      expect(subject.code).to eq(404)
+      it { is_expected.to have_attributes(code: 404) }
+      it { is_expected.to_not be_success }
+      it { is_expected.to be_error }
     end
-
-    it 'has a body' do
-      expect(subject.body).to eq({body_parser_error: "743: unexpected token at 'not found'"})
-    end
-
-    it { is_expected.to_not be_success }
-    it { is_expected.to be_error }
-  end
-
-  describe 'blank body response' do
-    let(:code) { 200 }
-    let(:body) { '' }
-
-    it 'has a code' do
-      expect(subject.code).to eq(200)
-    end
-
-    it 'has blank body' do
-      expect(subject.body).to eq('')
-    end
-
-    it { is_expected.to be_success }
-    it { is_expected.to_not be_error }
-  end
-
-  describe 'no body response' do
-    let(:code) { 200 }
-    let(:body) { nil }
-
-    it 'has a code' do
-      expect(subject.code).to eq(200)
-    end
-
-    it 'has nil body' do
-      expect(subject.body).to be_nil
-    end
-
-    it { is_expected.to be_success }
-    it { is_expected.to_not be_error }
   end
 end
