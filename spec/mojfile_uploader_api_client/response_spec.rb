@@ -19,13 +19,8 @@ RSpec.describe MojFileUploaderApiClient::Response do
         expect(subject.code).to eq(200)
       end
 
-      it 'success true' do
-        expect(subject.success?).to be_truthy
-      end
-
-      it 'error false' do
-        expect(subject.error?).to be_falsey
-      end
+      it { is_expected.to be_success }
+      it { is_expected.to_not be_error }
     end
 
     context '204 code' do
@@ -35,13 +30,8 @@ RSpec.describe MojFileUploaderApiClient::Response do
         expect(subject.code).to eq(204)
       end
 
-      it 'success true' do
-        expect(subject.success?).to be_truthy
-      end
-
-      it 'error false' do
-        expect(subject.error?).to be_falsey
-      end
+      it { is_expected.to be_success }
+      it { is_expected.to_not be_error }
     end
   end
 
@@ -57,13 +47,8 @@ RSpec.describe MojFileUploaderApiClient::Response do
       expect(subject.body).to eq({body_parser_error: "743: unexpected token at 'not found'"})
     end
 
-    it 'success false' do
-      expect(subject.success?).to be_falsey
-    end
-
-    it 'error true' do
-      expect(subject.error?).to be_truthy
-    end
+    it { is_expected.to_not be_success }
+    it { is_expected.to be_error }
   end
 
   describe 'blank body response' do
@@ -78,13 +63,8 @@ RSpec.describe MojFileUploaderApiClient::Response do
       expect(subject.body).to eq('')
     end
 
-    it 'success false' do
-      expect(subject.success?).to be_truthy
-    end
-
-    it 'error true' do
-      expect(subject.error?).to be_falsey
-    end
+    it { is_expected.to be_success }
+    it { is_expected.to_not be_error }
   end
 
   describe 'no body response' do
@@ -99,12 +79,7 @@ RSpec.describe MojFileUploaderApiClient::Response do
       expect(subject.body).to be_nil
     end
 
-    it 'success false' do
-      expect(subject.success?).to be_truthy
-    end
-
-    it 'error true' do
-      expect(subject.error?).to be_falsey
-    end
+    it { is_expected.to be_success }
+    it { is_expected.to_not be_error }
   end
 end

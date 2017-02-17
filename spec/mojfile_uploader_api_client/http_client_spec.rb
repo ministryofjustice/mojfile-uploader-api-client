@@ -23,6 +23,12 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
       end
     end
 
+    after(:each) do
+      MojFileUploaderApiClient::HttpClient.configure do |config|
+        config.options = nil
+      end
+    end
+
     it 'should be able to override any of the default client options' do
       expect(subject.options).to eq({headers: {"Content-Type" => "application/json", "Accept" => "application/json"},
                                      verify_ssl: true,
