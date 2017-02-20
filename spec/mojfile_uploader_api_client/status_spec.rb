@@ -4,13 +4,13 @@ RSpec.describe MojFileUploaderApiClient::Status do
   let(:client) { RestClient::Request }
   # It also returns the status of the services it depends on, but this is
   # sufficient for the purposes of the spec.
-  let(:response_body) { { service_status: 'ok' }.to_json }
-  let(:response) { instance_double('Response', code: 200, body: response_body) }
+  let(:client_response_body) { { service_status: 'ok' }.to_json }
+  let(:client_response) { instance_double('Response', code: 200, body: client_response_body) }
 
   subject { described_class.new }
 
   before(:each) do
-    allow(client).to receive(:execute).and_return(response)
+    allow(client).to receive(:execute).and_return(client_response)
   end
 
   context 'endpoint' do
@@ -63,7 +63,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
     end
 
     context 'for a successful response without body' do
-      let(:response) { instance_double('Response', code: 200, body: nil) }
+      let(:client_response) { instance_double('Response', code: 200, body: nil) }
 
       it 'should be false' do
         subject.call
@@ -80,24 +80,24 @@ RSpec.describe MojFileUploaderApiClient::Status do
     end
 
     context 'for an unsuccessful response with body' do
-      let(:response) { instance_double('Response', code: 500, body: 'boom') }
+      let(:client_response) { instance_double('Response', code: 500, body: 'boom') }
 
       it 'should be false' do
         subject.call
         expect(subject.available?).to eq(false)
       end
 
-      it 'should have a code and a body' do
+      it 'should have a code and fail on body' do
         subject.call
         response = subject.response
 
         expect(response.code).to eq(500)
-        expect(response.body).to eq({body_parser_error: "743: unexpected token at 'boom'"})
+        expect { response.body }.to raise_error(MojFileUploaderApiClient::Response::UnparsableResponseError)
       end
     end
 
     context 'for an unsuccessful response without body' do
-      let(:response) { instance_double('Response', code: 500, body: nil) }
+      let(:client_response) { instance_double('Response', code: 500, body: nil) }
 
       it 'should be false' do
         subject.call

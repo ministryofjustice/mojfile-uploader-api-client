@@ -1,10 +1,12 @@
 module MojFileUploaderApiClient
   class Response
-    attr_accessor :code, :body
+    class UnparsableResponseError < RuntimeError; end
+
+    attr_accessor :code
 
     def initialize(code:, body:)
-      self.code = code
-      self.body = parse_body(body)
+      @code = code
+      @raw_body = body
     end
 
     def success?
@@ -15,13 +17,17 @@ module MojFileUploaderApiClient
       !success?
     end
 
+    def body
+      @body ||= parse_body
+    end
+
     private
 
-    def parse_body(body)
-      return body if ['', nil].include?(body)
-      JSON.parse(body, symbolize_names: true)
-    rescue JSON::ParserError => ex
-      {body_parser_error: ex.message}
+    def parse_body
+      return if @raw_body.nil? || @raw_body.empty?
+      JSON.parse(@raw_body, symbolize_names: true)
+    rescue JSON::ParserError
+      raise UnparsableResponseError
     end
   end
 end
