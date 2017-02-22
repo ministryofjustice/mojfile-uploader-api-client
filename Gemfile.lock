@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mojfile-uploader-api-client (0.1.1)
+    mojfile-uploader-api-client (0.2)
       rest-client (~> 2.0.0)
 
 GEM
@@ -140,4 +140,4 @@ DEPENDENCIES
   rubocop (~> 0.41)
 
 BUNDLED WITH
-   1.13.6
+   1.14.4
