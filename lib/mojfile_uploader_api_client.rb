@@ -10,6 +10,8 @@ require 'mojfile_uploader_api_client/delete_file'
 require 'mojfile_uploader_api_client/list_files'
 
 module MojFileUploaderApiClient
+  INFECTED_FILE_RESPONSE_CODE = 400
+
   class Unavailable < StandardError; end
   class RequestError < StandardError; end
   class InfectedFileError < StandardError; end
@@ -19,7 +21,7 @@ module MojFileUploaderApiClient
 
     if response.success?
       response.body
-    elsif response.code.equal?(400)
+    elsif response.code.equal?(INFECTED_FILE_RESPONSE_CODE)
       raise InfectedFileError
     else
       raise RequestError

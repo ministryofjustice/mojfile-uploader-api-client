@@ -21,6 +21,13 @@ end
 #### When a previous collection reference is known:
 
 ```ruby
+MojFileUploaderApiClient.add_file(title: 'test', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757')
+=> {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757", :key=>"7c6aca2c-eb7a-4194-8166-9fd6ac82127b.test.txt"}
+```
+
+Or you can use the `AddFile` client directly:
+
+```ruby
 MojFileUploaderApiClient::AddFile.new(title: 'test', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757').call
 
 => #<MojFileUploaderApiClient::Response:0x007fe4e5c85ce0
@@ -29,6 +36,13 @@ MojFileUploaderApiClient::AddFile.new(title: 'test', filename: 'test.txt', data:
 ```
 
 #### No previous collection reference (will create a new one):
+
+```ruby
+MojFileUploaderApiClient.add_file(title: 'test', filename: 'test.txt', data: 'bla bla bla')
+=> {:collection=>"741635f7-488a-49cc-a3f1-9ee38795e28e", :key=>"0543a21d-e884-4076-89be-41cc09b00da1.test.txt"}
+```
+
+Or you can use the `AddFile` client directly:
 
 ```ruby
 MojFileUploaderApiClient::AddFile.new(title: 'test', filename: 'test.txt', data: 'bla bla bla').call
@@ -41,6 +55,13 @@ MojFileUploaderApiClient::AddFile.new(title: 'test', filename: 'test.txt', data:
 ### Delete a file
 
 ```ruby
+MojFileUploaderApiClient.delete_file(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757', filename: 'test1.txt')
+=> RequestError
+```
+
+Or you can use the `DeleteFile` client directly:
+
+```ruby
 MojFileUploaderApiClient::DeleteFile.new(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757', filename: 'test1.txt').call
 => #<MojFileUploaderApiClient::Response:0x007fe4e59c8098 @body={:body_parser_error=>"743: unexpected token at ''"}, @code=204>
 ```
@@ -48,11 +69,19 @@ MojFileUploaderApiClient::DeleteFile.new(collection_ref: 'a45c556f-a628-41d3-8c2
 ### List files
 
 ```ruby
+MojFileUploaderApiClient.list_files(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757')
+=> {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757",
+    :files=>[{:key=>"a45c556f-a628-41d3-8c29-351f84e63757/test1.txt", :title=>"test1.txt", :last_modified=>"2016-11-30T15:30:52.000Z"}]}
+```
+
+Or you can use the `ListFiles` client directly:
+
+```ruby
 MojFileUploaderApiClient::ListFiles.new(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757').call
 => #<MojFileUploaderApiClient::Response:0x007fe4e5ac91e0
  @body=
   {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757",
-   :files=>[{:key=>"a45c556f-a628-41d3-8c29-351f84e63757/test1.txt", :title=>"test1.txt", :last_modified=>"2016-11-30T15:30:52.000Z"}]},
+   :files=>[{:key=>"a45c556f-a628-41d3-8c29-351f84e63757/test1.txt", :title=>"test1.txt", :last_modified=>"2016-11-30T15:30:52.000Z"}]}
  @code=200>
 ```
 
