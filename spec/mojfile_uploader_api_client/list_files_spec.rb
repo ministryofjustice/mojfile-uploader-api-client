@@ -12,19 +12,44 @@ RSpec.describe MojFileUploaderApiClient::ListFiles do
   end
 
   context 'endpoint' do
-    let(:expected_endpoint) { 'abc-123-xxx' }
+    context 'without a folder' do
+      let(:file_arguments) { {collection_ref: 'abc-123-xxx'} }
+      let(:expected_endpoint) { 'abc-123-xxx' }
 
-    it 'should build the endpoint using the collection_ref' do
-      expect(subject.endpoint).to eq(expected_endpoint)
+      it 'should build the endpoint using the collection_ref' do
+        expect(subject.endpoint).to eq(expected_endpoint)
+      end
+    end
+
+    context 'with a folder' do
+      let(:file_arguments) { {folder: 'subfolder', collection_ref: 'abc-123-xxx'} }
+      let(:expected_endpoint) { 'abc-123-xxx/subfolder' }
+
+      it 'should build the endpoint using the collection_ref' do
+        expect(subject.endpoint).to eq(expected_endpoint)
+      end
     end
   end
 
   context 'URL' do
-    let(:expected_url) { 'http://example.com/abc-123-xxx' }
+    context 'without a folder' do
+      let(:file_arguments) { {collection_ref: 'abc-123-xxx'} }
+      let(:expected_url) { 'http://example.com/abc-123-xxx' }
 
-    it 'should build the full URL using base_url and endpoint' do
-      expect(client).to receive(:execute).with(hash_including(url: expected_url))
-      subject.call
+      it 'should build the full URL using base_url and endpoint' do
+        expect(client).to receive(:execute).with(hash_including(url: expected_url))
+        subject.call
+      end
+    end
+
+    context 'with a folder' do
+      let(:file_arguments) { {folder: 'subfolder', collection_ref: 'abc-123-xxx'} }
+      let(:expected_url) { 'http://example.com/abc-123-xxx/subfolder' }
+
+      it 'should build the full URL using base_url and endpoint' do
+        expect(client).to receive(:execute).with(hash_including(url: expected_url))
+        subject.call
+      end
     end
   end
 

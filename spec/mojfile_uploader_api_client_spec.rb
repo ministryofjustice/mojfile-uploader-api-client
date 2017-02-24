@@ -16,7 +16,6 @@ RSpec.describe MojFileUploaderApiClient do
     let(:client_class) { MojFileUploaderApiClient::AddFile }
     let(:params) {{
       collection_ref: '123',
-      title: 'title',
       filename: 'filename',
       data: 'data'
     }}

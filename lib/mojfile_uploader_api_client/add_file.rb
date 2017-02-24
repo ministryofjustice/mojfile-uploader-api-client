@@ -1,10 +1,10 @@
 module MojFileUploaderApiClient
   class AddFile < MojFileUploaderApiClient::HttpClient
-    attr_accessor :collection_ref, :title, :filename, :data
+    attr_accessor :collection_ref, :folder, :filename, :data
 
-    def initialize(collection_ref: nil, title:, filename:, data:)
+    def initialize(collection_ref: nil, folder: nil, filename:, data:)
       self.collection_ref = collection_ref
-      self.title = title
+      self.folder = folder
       self.filename = filename
       self.data = data
     end
@@ -14,7 +14,9 @@ module MojFileUploaderApiClient
     end
 
     def payload
-      {file_title: title, file_filename: filename, file_data: data}
+      payload = {file_filename: filename, file_data: data}
+      payload[:folder] = folder if folder
+      payload
     end
 
     def endpoint

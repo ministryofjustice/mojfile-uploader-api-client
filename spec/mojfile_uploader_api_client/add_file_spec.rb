@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe MojFileUploaderApiClient::AddFile do
   let(:client) { RestClient::Request }
   let(:response) { instance_double('Response', code: 200, body: '{}') }
-  let(:file_arguments) { {title: 'test', filename: 'test.txt', data: 'bla bla bla'} }
+  let(:file_arguments) { {folder: 'subfolder', filename: 'test.txt', data: 'bla bla bla'} }
 
   subject { described_class.new(file_arguments) }
 
@@ -21,7 +21,7 @@ RSpec.describe MojFileUploaderApiClient::AddFile do
     end
 
     context 'when an existing collection_ref is provided' do
-      let(:file_arguments) { {title: 'test', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'abc-123-xxx'} }
+      let(:file_arguments) { {folder: 'subfolder', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'abc-123-xxx'} }
       let(:expected_endpoint) { 'abc-123-xxx/new' }
 
       it 'should build the endpoint without a collection_ref' do
@@ -41,7 +41,7 @@ RSpec.describe MojFileUploaderApiClient::AddFile do
     end
 
     context 'when an existing collection_ref is provided' do
-      let(:file_arguments) { {title: 'test', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'abc-123-xxx'} }
+      let(:file_arguments) { {folder: 'subfolder', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'abc-123-xxx'} }
       let(:expected_url) { 'http://example.com/abc-123-xxx/new' }
 
       it 'should build the full URL using base_url and endpoint' do
@@ -61,12 +61,26 @@ RSpec.describe MojFileUploaderApiClient::AddFile do
   end
 
   context 'payload' do
-    let(:expected_payload) { "{\"file_title\":\"test\",\"file_filename\":\"test.txt\",\"file_data\":\"bla bla bla\"}" }
+    context 'when a folder is given' do
+      let(:file_arguments) { {folder: 'subfolder', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'abc-123-xxx'} }
+      let(:expected_payload) { "{\"file_filename\":\"test.txt\",\"file_data\":\"bla bla bla\",\"folder\":\"subfolder\"}" }
 
-    it 'should send the specified payload' do
-      expect(client).to receive(:execute).with(hash_including(:method, :url, :headers, :verify_ssl, :open_timeout, :read_timeout,
-                                                              payload: expected_payload))
-      subject.call
+      it 'should send the specified payload' do
+        expect(client).to receive(:execute).with(hash_including(:method, :url, :headers, :verify_ssl, :open_timeout, :read_timeout,
+                                                                payload: expected_payload))
+        subject.call
+      end
+    end
+
+    context 'when no folder is given' do
+      let(:file_arguments) { {filename: 'test.txt', data: 'bla bla bla', collection_ref: 'abc-123-xxx'} }
+      let(:expected_payload) { "{\"file_filename\":\"test.txt\",\"file_data\":\"bla bla bla\"}" }
+
+      it 'should send the specified payload' do
+        expect(client).to receive(:execute).with(hash_including(:method, :url, :headers, :verify_ssl, :open_timeout, :read_timeout,
+                                                                payload: expected_payload))
+        subject.call
+      end
     end
   end
 end

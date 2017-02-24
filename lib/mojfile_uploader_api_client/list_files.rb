@@ -1,9 +1,10 @@
 module MojFileUploaderApiClient
   class ListFiles < MojFileUploaderApiClient::HttpClient
-    attr_accessor :collection_ref
+    attr_accessor :collection_ref, :folder
 
-    def initialize(collection_ref:)
+    def initialize(collection_ref:, folder: nil)
       self.collection_ref = collection_ref
+      self.folder = folder
     end
 
     def verb
@@ -11,7 +12,7 @@ module MojFileUploaderApiClient
     end
 
     def endpoint
-      collection_ref
+      [collection_ref, folder].compact.join('/')
     end
   end
 end
