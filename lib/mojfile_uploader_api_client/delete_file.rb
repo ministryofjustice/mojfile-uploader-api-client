@@ -1,9 +1,10 @@
 module MojFileUploaderApiClient
   class DeleteFile < MojFileUploaderApiClient::HttpClient
-    attr_accessor :collection_ref, :filename
+    attr_accessor :collection_ref, :folder, :filename
 
-    def initialize(collection_ref:, filename:)
+    def initialize(collection_ref:, folder: nil, filename:)
       self.collection_ref = collection_ref
+      self.folder = folder
       self.filename = filename
     end
 
@@ -12,7 +13,7 @@ module MojFileUploaderApiClient
     end
 
     def endpoint
-      [collection_ref, filename].join('/')
+      [collection_ref, folder, filename].compact.join('/')
     end
   end
 end

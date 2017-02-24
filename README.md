@@ -25,6 +25,13 @@ MojFileUploaderApiClient.add_file(title: 'test', filename: 'test.txt', data: 'bl
 => {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757", :key=>"7c6aca2c-eb7a-4194-8166-9fd6ac82127b.test.txt"}
 ```
 
+With a folder name:
+
+```ruby
+MojFileUploaderApiClient.add_file(folder: 'subfolder', title: 'test', filename: 'test.txt', data: 'bla bla bla', collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757')
+=> {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757", :folder=>"subfolder", :key=>"7c6aca2c-eb7a-4194-8166-9fd6ac82127b.test.txt"}
+```
+
 Or you can use the `AddFile` client directly:
 
 ```ruby
@@ -59,6 +66,13 @@ MojFileUploaderApiClient.delete_file(collection_ref: 'a45c556f-a628-41d3-8c29-35
 => RequestError
 ```
 
+With a folder:
+
+```ruby
+MojFileUploaderApiClient.delete_file(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757', folder: 'subfolder', filename: 'test1.txt')
+=> RequestError
+```
+
 Or you can use the `DeleteFile` client directly:
 
 ```ruby
@@ -72,6 +86,14 @@ MojFileUploaderApiClient::DeleteFile.new(collection_ref: 'a45c556f-a628-41d3-8c2
 MojFileUploaderApiClient.list_files(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757')
 => {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757",
     :files=>[{:key=>"a45c556f-a628-41d3-8c29-351f84e63757/test1.txt", :title=>"test1.txt", :last_modified=>"2016-11-30T15:30:52.000Z"}]}
+```
+
+With a folder:
+
+```ruby
+MojFileUploaderApiClient.list_files(collection_ref: 'a45c556f-a628-41d3-8c29-351f84e63757', folder: 'subfolder')
+=> {:collection=>"a45c556f-a628-41d3-8c29-351f84e63757", :folder=>"subfolder",
+    :files=>[{:key=>"a45c556f-a628-41d3-8c29-351f84e63757/subfolder/test1.txt", :title=>"test1.txt", :last_modified=>"2016-11-30T15:30:52.000Z"}]}
 ```
 
 Or you can use the `ListFiles` client directly:
