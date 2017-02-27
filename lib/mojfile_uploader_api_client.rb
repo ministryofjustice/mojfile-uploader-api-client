@@ -11,10 +11,12 @@ require 'mojfile_uploader_api_client/list_files'
 
 module MojFileUploaderApiClient
   INFECTED_FILE_RESPONSE_CODE = 400
+  NOT_FOUND_RESPONSE_CODE = 404
 
   class Unavailable < StandardError; end
   class RequestError < StandardError; end
   class InfectedFileError < StandardError; end
+  class NotFoundError < StandardError; end
 
   def self.add_file(params)
     response = AddFile.new(params).call
@@ -38,7 +40,12 @@ module MojFileUploaderApiClient
   def self.list_files(params)
     response = ListFiles.new(params).call
 
-    raise RequestError unless response.success?
-    response.body
+    if response.success?
+      response.body
+    elsif response.code.equal?(NOT_FOUND_RESPONSE_CODE)
+      raise NotFoundError
+    else
+      raise RequestError
+    end
   end
 end
