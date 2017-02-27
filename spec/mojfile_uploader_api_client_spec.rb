@@ -92,6 +92,15 @@ RSpec.describe MojFileUploaderApiClient do
       end
     end
 
+    context 'when the response is not found' do
+      let(:success) { false }
+      let(:code) { 404 }
+
+      it 'raises NotFoundError' do
+        expect { client.list_files(params) }.to raise_error(MojFileUploaderApiClient::NotFoundError)
+      end
+    end
+
     context 'when the response is unsuccessful' do
       let(:success) { false }
       let(:code) { 402 }
