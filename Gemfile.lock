@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mojfile-uploader-api-client (0.3)
+    mojfile-uploader-api-client (0.4)
       rest-client (~> 2.0.0)
 
 GEM
