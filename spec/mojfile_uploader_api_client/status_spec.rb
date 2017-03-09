@@ -92,7 +92,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
         response = subject.response
 
         expect(response.code).to eq(500)
-        expect { response.body }.to raise_error(MojFileUploaderApiClient::Response::UnparsableResponseError)
+        expect { response.body }.to raise_error(MojFileUploaderApiClient::UnparsableResponseError)
       end
     end
 

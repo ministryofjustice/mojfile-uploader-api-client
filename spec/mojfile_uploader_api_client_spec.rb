@@ -44,7 +44,11 @@ RSpec.describe MojFileUploaderApiClient do
       let(:code) { 402 }
 
       it 'raises RequestError' do
-        expect { client.add_file(params) }.to raise_error(MojFileUploaderApiClient::RequestError)
+        expect(response).to receive(:body).and_return(body)
+        expect { client.add_file(params) }.to raise_error(MojFileUploaderApiClient::RequestError, 'Could not add file') do |error|
+          expect(error.code).to eq(402)
+          expect(error.body).to eq(body)
+        end
       end
     end
   end
@@ -71,7 +75,12 @@ RSpec.describe MojFileUploaderApiClient do
       let(:code) { 402 }
 
       it 'raises RequestError' do
-        expect { client.delete_file(params) }.to raise_error(MojFileUploaderApiClient::RequestError)
+        expect(response).to receive(:body).and_return(body)
+
+        expect { client.delete_file(params) }.to raise_error(MojFileUploaderApiClient::RequestError, 'Could not delete file') do |error|
+          expect(error.code).to eq(402)
+          expect(error.body).to eq(body)
+        end
       end
     end
   end
@@ -106,7 +115,11 @@ RSpec.describe MojFileUploaderApiClient do
       let(:code) { 402 }
 
       it 'raises RequestError' do
-        expect { client.list_files(params) }.to raise_error(MojFileUploaderApiClient::RequestError)
+        expect(response).to receive(:body).and_return(body)
+        expect { client.list_files(params) }.to raise_error(MojFileUploaderApiClient::RequestError, 'Could not list files') do |error|
+          expect(error.code).to eq(402)
+          expect(error.body).to eq(body)
+        end
       end
     end
   end
