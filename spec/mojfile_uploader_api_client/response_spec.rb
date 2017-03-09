@@ -29,7 +29,9 @@ RSpec.describe MojFileUploaderApiClient::Response do
       let(:body) { 'sadifuygwi3P982(*#Q$&(*' }
 
       it 'raises an error' do
-        expect { subject.body }.to raise_error(MojFileUploaderApiClient::Response::UnparsableResponseError)
+        expect { subject.body }.to raise_error(MojFileUploaderApiClient::UnparsableResponseError, 'Invalid JSON response') do |error|
+          expect(error.raw_body).to eq(body)
+        end
       end
     end
   end
