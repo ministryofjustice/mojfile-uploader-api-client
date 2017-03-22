@@ -6,10 +6,15 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
 
   let(:client) { RestClient::Request }
   let(:client_response) { instance_double('Response', code: 200, body: '{}') }
+  let(:headers) {{
+    'Content-Type' => 'application/json',
+    'Accept' => 'application/json',
+    'x-amz-server-side-encryption' => 'AES256'
+  }}
 
   describe 'default options' do
     it 'should have a default set of client options' do
-      expect(subject.options).to eq({headers: {"Content-Type" => "application/json", "Accept" => "application/json"},
+      expect(subject.options).to eq({headers: headers,
                                      verify_ssl: false,
                                      open_timeout: 5,
                                      read_timeout: 15})
@@ -30,7 +35,7 @@ RSpec.describe MojFileUploaderApiClient::HttpClient do
     end
 
     it 'should be able to override any of the default client options' do
-      expect(subject.options).to eq({headers: {"Content-Type" => "application/json", "Accept" => "application/json"},
+      expect(subject.options).to eq({headers: headers,
                                      verify_ssl: true,
                                      open_timeout: 100,
                                      read_timeout: 500})

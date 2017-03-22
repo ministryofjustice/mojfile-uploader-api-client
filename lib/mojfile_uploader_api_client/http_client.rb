@@ -3,7 +3,11 @@ module MojFileUploaderApiClient
     attr_accessor :response
 
     DEFAULT_OPTIONS = {
-      headers: {'Content-Type' => 'application/json', 'Accept' => 'application/json'},
+      headers: {
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json',
+        'x-amz-server-side-encryption' => 'AES256'
+      },
       verify_ssl: false,
       open_timeout: 5,
       read_timeout: 15
