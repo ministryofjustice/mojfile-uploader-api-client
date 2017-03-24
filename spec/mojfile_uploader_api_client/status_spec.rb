@@ -14,7 +14,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
   end
 
   context 'endpoint' do
-    let(:expected_endpoint) { 'healthcheck' }
+    let(:expected_endpoint) { 'status' }
 
     it 'should return the endpoint' do
       expect(subject.endpoint).to eq(expected_endpoint)
@@ -22,7 +22,7 @@ RSpec.describe MojFileUploaderApiClient::Status do
   end
 
   context 'URL' do
-    let(:expected_url) { 'http://example.com/healthcheck' }
+    let(:expected_url) { 'http://example.com/status' }
 
     it 'should build the full URL using base_url and endpoint' do
       expect(client).to receive(:execute).with(hash_including(url: expected_url))

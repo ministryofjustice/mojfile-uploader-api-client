@@ -6,7 +6,7 @@ module MojFileUploaderApiClient
     end
 
     def endpoint
-      'healthcheck'
+      'status'
     end
 
     def available?
