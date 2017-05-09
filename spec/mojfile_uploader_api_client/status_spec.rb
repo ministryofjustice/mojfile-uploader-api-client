@@ -13,6 +13,12 @@ RSpec.describe MojFileUploaderApiClient::Status do
     allow(client).to receive(:execute).and_return(client_response)
   end
 
+  context 'options' do
+    it 'overrides the default timeout' do
+      expect(subject.options[:timeout]).to eq(5)
+    end
+  end
+
   context 'endpoint' do
     let(:expected_endpoint) { 'status' }
 
