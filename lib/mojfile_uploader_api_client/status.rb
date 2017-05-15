@@ -1,5 +1,10 @@
 module MojFileUploaderApiClient
   class Status < MojFileUploaderApiClient::HttpClient
+    def self.options
+      # Setting `timeout` will override both `read_timeout` and `open_timeout`
+      # in the RestClient.
+      { timeout: 5 }
+    end
 
     def verb
       :get

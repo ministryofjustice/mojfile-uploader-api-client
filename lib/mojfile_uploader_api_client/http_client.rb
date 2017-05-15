@@ -41,7 +41,9 @@ module MojFileUploaderApiClient
     end
 
     def options
-      DEFAULT_OPTIONS.merge(HttpClient.options || {})
+      # Using `self.class.options` allows overriding defaults in individual API
+      # calls and ensure that overrides do not persist across calls.
+      DEFAULT_OPTIONS.merge(self.class.options || {})
     end
 
     private

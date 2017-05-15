@@ -1,3 +1,6 @@
+[![Build
+Status](https://travis-ci.org/ministryofjustice/mojfile-uploader-api-client.svg?branch=master)](https://travis-ci.org/ministryofjustice/mojfile-uploader-api-client)
+
 # mojfile-uploader-api-client
 An API client for [mojfile-uploader](https://github.com/ministryofjustice/mojfile-uploader)
 
