@@ -9,6 +9,7 @@ require 'mojfile_uploader_api_client/status'
 require 'mojfile_uploader_api_client/add_file'
 require 'mojfile_uploader_api_client/delete_file'
 require 'mojfile_uploader_api_client/list_files'
+require 'logger'
 
 module MojFileUploaderApiClient
   INFECTED_FILE_RESPONSE_CODE = 400
@@ -34,7 +35,11 @@ module MojFileUploaderApiClient
   end
 
   def self.list_files(params)
+    logger = Logger.new(STDOUT)
+
+    logger.info("[api-client] Send request to uploader with params #{params.inspect}")
     response = ListFiles.new(params).call
+    logger.info("[api-client] Response successful: #{response.success?}")
 
     if response.success?
       response.body
