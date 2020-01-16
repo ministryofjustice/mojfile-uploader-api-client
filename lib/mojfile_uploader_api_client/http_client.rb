@@ -62,11 +62,16 @@ module MojFileUploaderApiClient
 
     def execute_request
       logger = Logger.new(STDOUT)
+      res = RestClient::Request.get("#{ENV['MOJ_FILE_UPLOADER_ENDPOINT']}/status.json")
+      logger.info("[api-client] Uploader status: code: #{res.code}, body: #{res.body}")
       begin
         res = RestClient::Request.execute(request_details)
         code, body = res.code, res.body
         logger.info("[api-client] Received request from uploader #{res.inspect}")
         logger.info("[api-client] res.code: #{code}, res.body: #{body}")
+      rescue RestClient::Exceptions::OpenTimeout => e
+        code, body = ex.http_code, ex.response
+        logger.info("[api-client] RestClient raised a timeout exception with code: #{code}, body: #{body}")
       rescue RestClient::Exception => ex
         code, body = ex.http_code, ex.response
         logger.info("[api-client] RestClient exception: #{ex.inspect}")
