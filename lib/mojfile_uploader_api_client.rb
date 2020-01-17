@@ -10,6 +10,7 @@ require 'mojfile_uploader_api_client/add_file'
 require 'mojfile_uploader_api_client/delete_file'
 require 'mojfile_uploader_api_client/list_files'
 require 'logger'
+require 'benchmark'
 
 module MojFileUploaderApiClient
   INFECTED_FILE_RESPONSE_CODE = 400
@@ -38,7 +39,10 @@ module MojFileUploaderApiClient
     logger = Logger.new(STDOUT)
 
     logger.info("[api-client] Send request to uploader with params #{params.inspect}")
-    response = ListFiles.new(params).call
+    time = Benchmark.measure do
+      response = ListFiles.new(params).call
+    end
+    logger.info("[api-client] Benchmarking 'ListFiles.new(params).call': #{time}")
     logger.info("[api-client] Response successful: #{response.success?}")
 
     if response.success?
