@@ -40,17 +40,17 @@ module MojFileUploaderApiClient
 
     logger.info("[api-client] Send request to uploader with params #{params.inspect}")
     time = Benchmark.measure do
-      response = ListFiles.new(params).call
+      @response = ListFiles.new(params).call
     end
     logger.info("[api-client] Benchmarking 'ListFiles.new(params).call': #{time}")
-    logger.info("[api-client] Response successful: #{response.success?}")
+    logger.info("[api-client] Response successful: #{@response.success?}")
 
-    if response.success?
-      response.body
-    elsif response.code.equal?(NOT_FOUND_RESPONSE_CODE)
+    if @response.success?
+      @response.body
+    elsif @response.code.equal?(NOT_FOUND_RESPONSE_CODE)
       raise NotFoundError
     else
-      raise RequestError.new('Could not list files', response.code, response.body)
+      raise RequestError.new('Could not list files', @response.code, @response.body)
     end
   end
 end
