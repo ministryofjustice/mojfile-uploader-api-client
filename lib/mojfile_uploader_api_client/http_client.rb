@@ -69,7 +69,7 @@ module MojFileUploaderApiClient
         code, body = res.code, res.body
         logger.info("[api-client] Received request from uploader #{res.inspect}")
         logger.info("[api-client] res.code: #{code}, res.body: #{body}")
-      rescue RestClient::Exceptions::OpenTimeout => e
+      rescue RestClient::Exceptions::OpenTimeout => ex
         code, body = ex.http_code, ex.response
         logger.info("[api-client] RestClient raised a timeout exception with code: #{code}, body: #{body}")
       rescue RestClient::Exception => ex
