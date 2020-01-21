@@ -62,7 +62,7 @@ module MojFileUploaderApiClient
 
     def execute_request
       logger = Logger.new(STDOUT)
-      res = RestClient.get("#{ENV['MOJ_FILE_UPLOADER_ENDPOINT']}/status.json")
+      res = RestClient.get("#{ENV['MOJ_FILE_UPLOADER_ENDPOINT']}/ping.json")
       logger.info("[api-client] Uploader status: code: #{res.code}, body: #{res.body}")
       begin
         res = RestClient::Request.execute(request_details)
